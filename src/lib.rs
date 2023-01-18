@@ -1,17 +1,17 @@
 use anyhow::Result;
-use minifb::{Scale, ScaleMode, Window, WindowOptions};
+use minifb::{Window, WindowOptions};
 use std::time::Duration;
 
+pub mod error;
 pub mod input;
 pub mod render;
 pub mod snake;
+pub mod sprite;
+
+use sprite::Vec2;
 
 pub fn init_window(title: &str, width: usize, height: usize, update_rate: u64) -> Result<Window> {
-    let options = WindowOptions {
-        scale: Scale::X1,
-        //scale_mode: ScaleMode::AspectRatioStretch,
-        ..Default::default()
-    };
+    let options = WindowOptions::default();
 
     let mut window = Window::new(title, width, height, options)?;
     window.limit_update_rate(Some(Duration::from_millis(update_rate)));
@@ -21,9 +21,25 @@ pub fn init_window(title: &str, width: usize, height: usize, update_rate: u64) -
 }
 
 pub fn do_tick(mut window: &mut Window, mut buffer: &mut Vec<u32>) -> Result<()> {
-    input::get_input(&mut window)?;
-    let text = StatusText::new(640, 640, 2);
-    text.draw(&mut buffer, (0, 0), "Test");
+    blank(&mut buffer);
+    static mut SPRITE: sprite::Sprite = sprite::Sprite {
+        position: Vec2 { x: 0, y: 0 },
+        size: Vec2 { x: 9, y: 9 },
+    };
+
+    let direction = input::get_input(&mut window)?;
+
+    if direction.is_some() {
+        unsafe {
+            SPRITE.translate(direction.unwrap());
+        }
+    }
+
+    let _text = StatusText::new(640, 640, 2);
+    //text.draw(&mut buffer, (0, 0), "Test");
+    unsafe {
+        render::draw_rect(SPRITE.position, SPRITE.size, &mut buffer)?;
+    }
     draw(&mut window, &buffer)?;
 
     Ok(())
@@ -33,6 +49,12 @@ fn draw(window: &mut Window, buffer: &Vec<u32>) -> Result<()> {
     window.update_with_buffer(buffer, 640, 640)?;
 
     Ok(())
+}
+
+fn blank(buffer: &mut Vec<u32>) {
+    for i in buffer {
+        *i = 0xFF121212 as u32;
+    }
 }
 
 pub struct StatusText {
