@@ -7,7 +7,7 @@ pub fn get_input(window: &mut Window) -> Result<Option<Direction>> {
         std::process::exit(0);
     }
 
-    for key in window.get_keys().iter() {
+    for key in window.get_keys_pressed(KeyRepeat::No).iter() {
         match key {
             Key::A => return Ok(Some(Direction::Left)),
             Key::D => return Ok(Some(Direction::Right)),

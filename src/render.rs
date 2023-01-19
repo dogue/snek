@@ -18,23 +18,19 @@ pub fn draw_rect(position: Vec2, _size: Vec2, buffer: &mut Vec<u32>) -> Result<(
 }
 
 pub fn out_of_bounds(position: &Vec2) -> bool {
+    let buffer_len = 640 * 640;
     let origin = (position.y * 640) + position.x;
 
-    if origin < 0 {
+    if origin < 0 || origin >= buffer_len {
         return true;
     }
 
-    let edge_y = origin + 32;
-    let edge_x = origin + (32 * 640);
-    let buffer_len = 640 * 640;
-
-    // either axis exceeds the end of the buffer
-    if edge_x >= buffer_len || edge_y >= buffer_len {
+    if position.x < 0 || position.y < 0 {
         return true;
     }
 
     // right hand edge exceeds the right most pixel of this row
-    if position.x >= 640 - 32 {
+    if position.x >= 640 {
         return true;
     }
 
