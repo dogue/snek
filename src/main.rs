@@ -1,5 +1,5 @@
 use anyhow::Result;
-use fbsnake::{
+use snek::{
     color::Color,
     sprite::{Sprite, Vec2},
     GameState,
@@ -17,13 +17,13 @@ fn main() -> Result<()> {
     let mut player = Sprite::new(Vec2::new(320, 320));
 
     // create window
-    let mut window = fbsnake::init_window("Framebuffer Snake", WINDOW_SIZE, WINDOW_SIZE, 500)?;
+    let mut window = snek::init_window("Framebuffer Snake", WINDOW_SIZE, WINDOW_SIZE, 500)?;
 
     let mut state = GameState { score: 0 };
 
     // loop and draw
     while window.is_open() {
-        fbsnake::do_tick(&mut window, &mut buffer, &mut player, &mut state)?;
+        snek::do_tick(&mut window, &mut buffer, &mut player, &mut state)?;
     }
 
     Ok(())

@@ -1,4 +1,4 @@
-# fbsnake
+# snek
 A from-scratch(ish) implementation of the classic snake game.
 
 ## This is a work-in-progress and is not yet functional!
