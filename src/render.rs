@@ -1,7 +1,7 @@
 use crate::error::RenderError;
 use crate::sprite::Vec2;
 
-pub fn draw_rect(position: Vec2, _size: Vec2, buffer: &mut Vec<u32>) -> Result<(), RenderError> {
+pub fn draw_rect(position: Vec2, buffer: &mut Vec<u32>) -> Result<(), RenderError> {
     if out_of_bounds(&position) {
         return Err(RenderError::OutOfBounds(position));
     }

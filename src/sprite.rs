@@ -1,28 +1,27 @@
 use crate::render;
+use anyhow::Result;
 
 /// Represents a single square sprite
 #[derive(Debug, Clone, Copy)]
 pub struct Sprite {
-    pub position: Vec2,
-    pub size: Vec2,
-    // color:
+    position: Vec2,
 }
 
 impl Sprite {
-    pub fn new(position: Vec2, size: Vec2) -> Self {
-        Self { position, size }
+    pub fn new(position: Vec2) -> Self {
+        Self { position }
     }
 
     pub fn pos(&self) -> Vec2 {
         self.position
     }
 
-    pub fn size(&self) -> Vec2 {
-        self.size
-    }
+    fn translate(&mut self, direction: Option<Direction>) {
+        if !direction.is_some() {
+            return;
+        }
 
-    pub fn translate(&mut self, direction: Direction) {
-        let new_pos = match direction {
+        let new_pos = match direction.unwrap() {
             Direction::Left => Vec2::new(self.position.x - 32, self.position.y),
             Direction::Right => Vec2::new(self.position.x + 32, self.position.y),
             Direction::Up => Vec2::new(self.position.x, self.position.y - 32),
@@ -32,6 +31,14 @@ impl Sprite {
         if !render::out_of_bounds(&new_pos) {
             self.position = new_pos;
         }
+    }
+
+    pub fn update(&mut self, mut buffer: &mut Vec<u32>, input: Option<Direction>) -> Result<()> {
+        self.translate(input);
+
+        render::draw_rect(self.position, &mut buffer)?;
+
+        Ok(())
     }
 }
 
