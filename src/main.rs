@@ -14,10 +14,10 @@ fn main() -> Result<()> {
     buffer.fill(0xFF121212);
 
     // create sprite
-    let mut player = Sprite::new(Vec2::new(320 - 16, 320 - 16));
+    let mut player = Sprite::new(Vec2::new(320, 320));
 
     // create window
-    let mut window = fbsnake::init_window("Framebuffer Snake", WINDOW_SIZE, WINDOW_SIZE, 250)?;
+    let mut window = fbsnake::init_window("Framebuffer Snake", WINDOW_SIZE, WINDOW_SIZE, 500)?;
 
     let mut state = GameState { score: 0 };
 
