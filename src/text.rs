@@ -67,7 +67,7 @@ fn color_from_bit(bit: u8, color: Color) -> u32 {
     if bit == 0 {
         0xFF121212
     } else {
-        color.to_bytes()
+        color.into()
     }
 }
 

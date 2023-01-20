@@ -1,5 +1,6 @@
 use anyhow::Result;
 use fbsnake::{
+    color::Color,
     sprite::{Sprite, Vec2},
     GameState,
 };
@@ -9,7 +10,7 @@ const WINDOW_SIZE: usize = 640;
 
 fn main() -> Result<()> {
     // create buffer
-    let mut buffer: Vec<u32> = vec![0xFF121212; WINDOW_SIZE * WINDOW_SIZE];
+    let mut buffer: Vec<u32> = vec![Color::BLANK.into(); WINDOW_SIZE * WINDOW_SIZE];
     buffer.fill(0xFF121212);
 
     // create sprite

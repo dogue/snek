@@ -14,8 +14,10 @@ impl Color {
     // Personal preference for a BG Color
     // DARK ASS GRAY
     pub const BLANK: Color = Color(18, 18, 18);
+}
 
-    pub fn to_bytes(&self) -> u32 {
+impl Into<u32> for Color {
+    fn into(self) -> u32 {
         let (r, g, b) = (self.0 as u32, self.1 as u32, self.2 as u32);
         (r << 16) | (g << 8) | b
     }

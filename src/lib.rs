@@ -35,7 +35,7 @@ pub fn do_tick(
     // blank the buffer
     blank(&mut buffer);
 
-    let test_text = text::Text::new(640, 2, Color(0, 255, 255));
+    let test_text = text::Text::new(640, 2, Color::MAGENTA);
 
     // get input
     let input = input::get_input(&mut window);
@@ -59,6 +59,6 @@ fn draw(window: &mut Window, buffer: &Vec<u32>) -> Result<()> {
 
 fn blank(buffer: &mut Vec<u32>) {
     for i in buffer {
-        *i = 0xFF121212 as u32;
+        *i = Color::BLANK.into();
     }
 }
