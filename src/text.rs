@@ -3,6 +3,8 @@
 // Font rendering is a complex thing and I did
 // not want to get stuck on it.
 
+use crate::color::Color;
+
 #[derive(Debug)]
 pub struct Text {
     texture: Vec<u32>,
@@ -11,18 +13,18 @@ pub struct Text {
 }
 
 impl Text {
-    pub fn new(width: usize, scale: usize) -> Self {
+    pub fn new(width: usize, scale: usize, color: Color) -> Self {
         let mut texture = Vec::with_capacity(128 * 128);
 
         for t in MICROKNIGHT_FONT {
-            texture.push(color_from_bit((t >> 7) & 1));
-            texture.push(color_from_bit((t >> 6) & 1));
-            texture.push(color_from_bit((t >> 5) & 1));
-            texture.push(color_from_bit((t >> 4) & 1));
-            texture.push(color_from_bit((t >> 3) & 1));
-            texture.push(color_from_bit((t >> 2) & 1));
-            texture.push(color_from_bit((t >> 1) & 1));
-            texture.push(color_from_bit(t & 1));
+            texture.push(color_from_bit((t >> 7) & 1, color));
+            texture.push(color_from_bit((t >> 6) & 1, color));
+            texture.push(color_from_bit((t >> 5) & 1, color));
+            texture.push(color_from_bit((t >> 4) & 1, color));
+            texture.push(color_from_bit((t >> 3) & 1, color));
+            texture.push(color_from_bit((t >> 2) & 1, color));
+            texture.push(color_from_bit((t >> 1) & 1, color));
+            texture.push(color_from_bit(t & 1, color));
         }
 
         Self {
@@ -61,11 +63,11 @@ impl Text {
 }
 
 #[inline(always)]
-fn color_from_bit(bit: u8) -> u32 {
+fn color_from_bit(bit: u8, color: Color) -> u32 {
     if bit == 0 {
-        0x00000000
+        0xFF121212
     } else {
-        0x00FF0000
+        color.to_bytes()
     }
 }
 

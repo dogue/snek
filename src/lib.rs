@@ -1,14 +1,20 @@
 use anyhow::Result;
+use color::Color;
 use minifb::{Window, WindowOptions};
 use sprite::Sprite;
 use std::time::Duration;
 
+pub mod color;
 pub mod error;
 pub mod input;
 pub mod render;
 pub mod snake;
 pub mod sprite;
 pub mod text;
+
+pub struct GameState {
+    pub score: usize,
+}
 
 pub fn init_window(title: &str, width: usize, height: usize, update_rate: u64) -> Result<Window> {
     let options = WindowOptions::default();
@@ -24,15 +30,20 @@ pub fn do_tick(
     mut window: &mut Window,
     mut buffer: &mut Vec<u32>,
     player: &mut Sprite,
+    state: &mut GameState,
 ) -> Result<()> {
     // blank the buffer
     blank(&mut buffer);
+
+    let test_text = text::Text::new(640, 2, Color(0, 255, 255));
 
     // get input
     let input = input::get_input(&mut window);
 
     // update sprite
     player.update(&mut buffer, input)?;
+
+    test_text.draw(&mut buffer, (0, 0), "Cyan perhaps?");
 
     // draw
     draw(&mut window, &mut buffer)?;
