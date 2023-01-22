@@ -12,13 +12,13 @@ pub struct Snake {
 impl Snake {
     pub fn new(position: Vec2) -> Self {
         Self {
-            head: position,
+            head: position * 32,
             body: vec![],
         }
     }
 
     pub fn draw(&self, mut buffer: &mut Vec<u32>) {
-        draw_rect(self.head, &mut buffer).unwrap();
+        let _ = draw_rect(self.head, &mut buffer);
     }
 
     pub fn translate(&mut self, direction: Direction) {
@@ -30,5 +30,8 @@ impl Snake {
         } * 32;
 
         self.head = self.head + delta;
+        self.head.x = self.head.x.clamp(0, 640 - 32);
+        self.head.y = self.head.y.clamp(0, 640 - 32);
+        dbg!(self.head);
     }
 }
