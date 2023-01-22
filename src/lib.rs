@@ -1,20 +1,18 @@
 use anyhow::Result;
 use color::Color;
+use input::get_input;
 use minifb::{Window, WindowOptions};
-use sprite::Sprite;
 use std::time::Duration;
+use world::World;
 
 pub mod color;
 pub mod error;
 pub mod input;
 pub mod render;
 pub mod snake;
-pub mod sprite;
 pub mod text;
-
-pub struct GameState {
-    pub score: usize,
-}
+pub mod utils;
+pub mod world;
 
 pub fn init_window(title: &str, width: usize, height: usize, update_rate: u64) -> Result<Window> {
     let options = WindowOptions::default();
@@ -26,27 +24,35 @@ pub fn init_window(title: &str, width: usize, height: usize, update_rate: u64) -
     Ok(window)
 }
 
-pub fn do_tick(
-    mut window: &mut Window,
-    mut buffer: &mut Vec<u32>,
-    player: &mut Sprite,
-    state: &mut GameState,
-) -> Result<()> {
+pub fn do_tick(mut world: &mut World) -> Result<()> {
     // blank the buffer
-    blank(&mut buffer);
+    blank(&mut world.buffer);
 
-    let test_text = text::Text::new(640, 2, Color::MAGENTA);
+    // create text object for frametime display
+    let time_text = text::Text::new(640, 1, Color::WHITE);
 
     // get input
-    let input = input::get_input(&mut window);
+    world.input = get_input(&mut world.window);
 
-    // update sprite
-    player.update(&mut buffer, input)?;
+    // if there is input, move the player sprite, then draw it
+    if world.input.is_some() {
+        world.player.translate(world.input.unwrap());
+    }
+    world.player.draw(&mut world.buffer);
 
-    test_text.draw(&mut buffer, (0, 0), "Cyan perhaps?");
+    // if running in debug, draw frametime display in lower left corner
+    #[cfg(debug_assertions)]
+    time_text.draw(
+        &mut world.buffer,
+        (0, 632),
+        &format!("Frame time: {}ms", world.tick_time.elapsed().as_millis()),
+    );
 
-    // draw
-    draw(&mut window, &mut buffer)?;
+    // update window contents with the buffer
+    draw(&mut world.window, &mut world.buffer)?;
+
+    // record current moment to calculate frametime on next frame
+    world.tick_time = std::time::Instant::now();
 
     Ok(())
 }

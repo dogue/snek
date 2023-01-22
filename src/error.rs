@@ -1,4 +1,4 @@
-use crate::sprite::Vec2;
+use crate::utils::Vec2;
 use std::{
     error::Error,
     fmt::{Display, Formatter},

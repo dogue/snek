@@ -1,29 +1,32 @@
 use anyhow::Result;
-use snek::{
-    color::Color,
-    sprite::{Sprite, Vec2},
-    GameState,
-};
+use snek::{color::Color, snake::Snake, utils::Vec2, world::World};
 
 // square window
 const WINDOW_SIZE: usize = 640;
 
 fn main() -> Result<()> {
-    // create buffer
-    let mut buffer: Vec<u32> = vec![Color::BLANK.into(); WINDOW_SIZE * WINDOW_SIZE];
-    buffer.fill(0xFF121212);
+    // create buffer and fill with blanking color
+    let buffer: Vec<u32> = vec![Color::BLANK.into(); WINDOW_SIZE * WINDOW_SIZE];
 
-    // create sprite
-    let mut player = Sprite::new(Vec2::new(320, 320));
+    // create snake
+    let player = Snake::new(Vec2::new(5, 5));
 
     // create window
-    let mut window = snek::init_window("Framebuffer Snake", WINDOW_SIZE, WINDOW_SIZE, 500)?;
+    let window = snek::init_window("Framebuffer Snake", WINDOW_SIZE, WINDOW_SIZE, 1)?;
 
-    let mut state = GameState { score: 0 };
+    // create world object
+    let mut world = World {
+        score: 0,
+        tick_time: std::time::Instant::now(),
+        buffer,
+        input: None,
+        player,
+        window,
+    };
 
     // loop and draw
-    while window.is_open() {
-        snek::do_tick(&mut window, &mut buffer, &mut player, &mut state)?;
+    while world.window.is_open() {
+        snek::do_tick(&mut world)?;
     }
 
     Ok(())

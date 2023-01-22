@@ -1,4 +1,4 @@
-use crate::sprite::Direction;
+use crate::utils::Direction;
 use minifb::{Key, KeyRepeat, Window};
 
 pub fn get_input(window: &mut Window) -> Option<Direction> {
